@@ -1,5 +1,5 @@
 # lichenHGT
-**codes for HGT detection in lichen (Crude code, incomplete, use with caution)**
+****codes for HGT detection in lichen****
 
 map.R -------------------- corresponding to Fig.1  
 process_fcs_res.py ------- flag contaminant sequences, corresponding to 'Contig filtering and contamination detection' part in Fig.2  
