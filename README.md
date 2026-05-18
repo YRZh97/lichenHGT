@@ -1,6 +1,7 @@
 # lichenHGT
 **codes for HGT detection in lichen (Crude code, incomplete, use with caution)**
 
+map.R -------------------- corresponding to Fig.1  
 process_fcs_res.py ------- flag contaminant sequences, corresponding to 'Contig filtering and contamination detection' part in Fig.2  
 filt.py ------------------ select sequences based on the results of the previous two scripts, corresponding to 'Contig filtering and contamination detection' part in Fig.2  
 diamond.py --------------- sequence alignment, corresponding to 'Alien Index score calculation' part in Fig.2  
