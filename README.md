@@ -35,4 +35,5 @@ For example:
 public_SRR14721965_metabat2_bin.1,GCA_964256395,Cladonia petrophila,195777
 ```
 
-The taxonomy ID can be obtained from the scientific name using the `taxonkit name2taxid` command.
+The taxonomy ID can be obtained from the scientific name using the `name2taxid` command in TaxonKit.
+
