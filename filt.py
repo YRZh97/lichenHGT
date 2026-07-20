@@ -10,7 +10,9 @@ def makedirectory(path,filename):
         shutil.rmtree(absolute_path)  # 删除目录，包括目录下的所有文件
     os.makedirs(absolute_path)
     return
-
+    
+'''
+#this step has been abandoned.
 badcontig = set()
 with open("kmerfreq_total_4mer") as f:#kmerfreq: samplename\tcontig1,contig2
     for line in f:
@@ -19,6 +21,7 @@ with open("kmerfreq_total_4mer") as f:#kmerfreq: samplename\tcontig1,contig2
             prefix = parts[0]
             for k in parts[1].split(","):
                 badcontig.add(f"{prefix}|{k}")
+'''
 
 names = []#hq.name: MAG\ttaxonomy information
 for line in open('hq.name','r'):
