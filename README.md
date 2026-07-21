@@ -22,7 +22,12 @@ This step filters contigs by length and removes potentially contaminated contigs
 
 ### Input Preparation
 
-Place all MAG genome sequence files in the `bin` directory and the corresponding GFF annotation files in the `gff` directory.
+Place the input files into separate directories according to their file types. For example:
+
+- Genome sequences in the `bin` directory.
+- GFF annotation files in the `gff` directory.
+- CDS sequence files in the `cds` directory.
+- Protein sequence files in the `faa` directory.
 
 Prepare a file named `hq.name` containing the following information for each MAG:
 
@@ -171,9 +176,52 @@ These steps can be executed by running the provided script, for example:
 python3 maf_trimal_iqtree.py prealign/ --step mafft
 ```
 
+For each `IQ-TREE` output (`*.treefile`), reroot the tree using the `get_midpoint_outgroup()` function provided by the Python package `ete3`, and save the rerooted tree as a new Newick file.
+
+Upload the rerooted trees to `iTOL` for manual inspection. The phylogenetic topology is then evaluated to determine whether each candidate HGT gene should be retained for downstream analyses.
+
 ## Step 4. Confidence Classification
 
+### Input Preparation
+
+At this stage, a set of candidate HGT genes has been identified.
+
+First, collect the protein sequences of all candidate HGT genes into a single FASTA file named `hgt.fa`.
+
+Next, obtain all taxonomy IDs belonging to the taxonomic subtree of the target lineage using `TaxonKit`. For example, to analyze HGT in fungi, run:
+
+```bash
+taxonkit list --ids 4751
+```
+
+Remove any unnecessary whitespace from the output and save the resulting taxonomy IDs to a file named `taxid`. The file should contain one taxonomy ID per line, for example:
+
+```text
+4751
+57731
+42900
+45238
+84418
+84419
+84420
+84421
+84422
+84423
+```
+
+### Generate the Gene–Contig Mapping File
+
+Run `stat_hgtincontigs.py` using the input files prepared in the previous steps.
+
+```bash
+python3 stat_hgtincontigs.py
+```
+
+The script generates a file named `gene_on_contig`. The `gene_on_contig0422` file used in this study has been included in this repository.
+
 ## Step 5. Donor Inference
+
+
 
 
 
