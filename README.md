@@ -39,15 +39,44 @@ public_SRR14721965_metabat2_bin.1,GCA_964256395,Cladonia petrophila,195777
 
 The taxonomy ID can be obtained from the scientific name using the `name2taxid` command in TaxonKit.
 
-### Running First Script 
+Prepare a file named `treefile` containing genome accession and geneID for each gene.
 
-Run `filt.py` from the current working directory:
+For example:
+
+```test
+GCA_964256395,g353
+```
+
+### FCS-GX for contamination detection
+
+Run `FCS-GX` on both the genome sequence and the corresponding CDS sequence for each MAG to identify potential contaminant sequences.
+
+For example:
+
+```text
+python3 fcs.py screen genome --fasta bin/{name}_genomic.fna --out-dir fcsgx_test/{name}_genome --gx-db '/path/to/gxdb' --tax-id {taxid}
+```
+
+After running `FCS-GX` for all MAGs, merge all generated `{n}.fcs_gx_report.txt` files into a single file named `totalfcsgx.txt`.
+
+Like this:
+
+```text
+#genome level   seq_id  start_pos       end_pos seq_len action  div     agg_cont_cov    top_tax_name
+GCA_964257225   contig  CAXVDQ010000002.1       1       1808    590398  TRIM    virs:prokaryotic viruses        55      Heterodera schachtii
+```
+
+> **Note:** Regardless of the action in the fifth column (*The recommended action*) of the `{n}.fcs_gx_report.txt`, all sequences flagged by `FCS-GX` are treated uniformly.
+
+This merged report serves as the input for `process_fcs_res.py` in the subsequent contamination filtering step.
+
+### Running Scripts 
 
 ```bash
 python3 filt.py
 ```
 
-The script will create a new directory named `newdir` in the current directory. The filtered contigs for each MAG will be saved as:
+The script will create a new directory named `newdir` in the current directory. The filtered protein sequences for each MAG will be saved as:
 
 ```text
 newdir/{n}.filtered.faa
@@ -55,13 +84,49 @@ newdir/{n}.filtered.faa
 
 where `{n}` represents the corresponding MAG name.
 
-### FCS-GX for contamination detection
-
-Run `FCS-GX` on both the genome sequence and the corresponding CDS sequence for each MAG to identify potential contaminant sequences.
-
-```text
-python3 fcs.py screen genome --fasta newdir/{n}.filtered.faa --out-dir fcsgx_test/{name}_genome --gx-db '/path/to/gxdb' --tax-id {taxid}
+```bash
+python3 process_fcs_res.py
 ```
+
+The sequences reported by the script are considered potential contaminants and are excluded from all subsequent analyses.
+
+## Step 2. Alien Index Score Calculation
+
+### Build the DIAMOND Database
+
+When building the DIAMOND database, include the taxonomy-related options `--taxonmap`, `--taxonnodes`, and `--taxonnames` to enable taxonomic annotation of alignment results.
+
+```bash
+diamond makedb \
+    --in nr.fa \
+    --db database_name \
+    --taxonmap prot.accession2taxid.gz \
+    --taxonnodes nodes.dmp \
+    --taxonnames names.dmp
+```
+
+### Align sequences using DIAMOND
+
+```bash
+python3 diamond.py
+```
+
+This script uses the filtered protein sequences (`newdir/{n}.filtered.faa`) from each MAG as input and performs two `DIAMOND` searches:
+
+1. **Search against the NR database** to identify homologous sequences. The results are saved as:
+
+   ```text
+   max300_subseq.fmt6
+   ```
+
+2. **Self-search against the corresponding MAG protein database** to identify within-genome homologs. The results are saved as:
+
+   ```text
+   {n}.fmt6
+   ```
+
+where `{n}` is the name of the corresponding MAG.
+
 
 
 
