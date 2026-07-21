@@ -6,7 +6,7 @@ from collections import defaultdict
 from ete3 import Tree
 
 BASE_DIR = "/path/to/your/directory"  
-TREEFILE = "treefile"#name list of HGTs, format: sample_id\tgene_id
+TREEFILE = "treefile_hgt"#name list of HGTs, format: sample_id\tgene_id
 HQ_FILE = "hq.name"
 FINAL_OUTPUT = os.path.join(BASE_DIR, "donor_species_final")
 TREES_DIR = os.path.join(BASE_DIR, "treefile")
