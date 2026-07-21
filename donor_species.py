@@ -5,12 +5,11 @@ import os
 from collections import defaultdict
 from ete3 import Tree
 
-BASE_DIR = "/path/to/your/directory"  # 修改为你的目录
+BASE_DIR = "/path/to/your/directory"  
 TREEFILE = "treefile"#name list of HGTs, format: sample_id\tgene_id
 HQ_FILE = "hq.name"
 FINAL_OUTPUT = os.path.join(BASE_DIR, "donor_species_final")
 TREES_DIR = os.path.join(BASE_DIR, "treefile")
-TARGET_DIR = os.path.join(BASE_DIR, "taxon_output")
 HQMAG_TAXON_FILE = os.path.join(BASE_DIR, "hqmag.taxon")#taxonomy information of high-completeness MAGs, format: genome_id\tlineage
 
 
@@ -85,8 +84,8 @@ with open(FINAL_OUTPUT, "w") as output2:
     output2.write("#sample\tgene\tMMSH_iden\tMMSH\tMMSH_taxid\tdonor\tbbhO\n")
 
     for sample_id, genes in namedic.items():
-        taxon2 = load_dict(os.path.join(TARGET_DIR, sample_id, "reformat.txt"), 0, 1)#reformat.txt contains taxonomic information of matched proteins, format: subject_id\ttaxonomy lineage
-        donor_path = os.path.join(TARGET_DIR, sample_id, "donor_species")
+        taxon2 = load_dict(os.path.join(BASE_DIR, sample_id, "reformat.txt"), 0, 1)#reformat.txt contains taxonomic information of matched proteins, format: subject_id\ttaxonomy lineage
+        donor_path = os.path.join(BASE_DIR, sample_id, "donor_species")
 
         newdic = {}
         identdic = {}
@@ -99,9 +98,9 @@ with open(FINAL_OUTPUT, "w") as output2:
                 newdic[gene].append(subject)
                 identdic[gene][subject] = 0.0
 
-        update_identities(os.path.join(TARGET_DIR, sample_id, f"{sample_id}.fmt6"), identdic)#sample_id.fmt6 contains the alignment results against the newly assembled MAGs obtained from sequencing data generated in this study.
+        update_identities(os.path.join(BASE_DIR, sample_id, f"{sample_id}.fmt6"), identdic)#sample_id.fmt6 contains the alignment results against the newly assembled MAGs obtained from sequencing data generated in this study.
         taxon_map = {}
-        update_identities(os.path.join(TARGET_DIR, sample_id, "max300_subseq.fmt6"), identdic, taxon_map)#max300_subseq.fmt6 contains the alignment results against NR database
+        update_identities(os.path.join(BASE_DIR, sample_id, "max300_subseq.fmt6"), identdic, taxon_map)#max300_subseq.fmt6 contains the alignment results against NR database
 
         with open(donor_path, "w") as totaloutput:
             for gene, hits in identdic.items():
@@ -128,9 +127,9 @@ with open(FINAL_OUTPUT, "w") as output2:
                     else:
                         totaloutput.write(f"{sample_id}\t{gene}\t{best_score}\t{best_hit}\t{taxon_value}\n")
 
-        revised_path = os.path.join(TARGET_DIR, sample_id, "donor_species_revised")
+        revised_path = os.path.join(BASE_DIR, sample_id, "donor_species_revised")
         bbho = {}
-        for cols in read_tsv(os.path.join(TARGET_DIR, sample_id, f"{sample_id}_ai.txt")):#{sample_id}_ai.txt was generated in the ai_calc.py script
+        for cols in read_tsv(os.path.join(BASE_DIR, sample_id, f"{sample_id}_ai.txt")):#{sample_id}_ai.txt was generated in the ai_calc.py script
             query = cols[0]
             if query not in namedic[sample_id]:
                 continue
@@ -140,9 +139,9 @@ with open(FINAL_OUTPUT, "w") as output2:
             elif subject.split("|")[1] in taxon2:
                 bbho[query] = [";".join(taxon2[subject.split("|")[1]].split(";")[:3]), subject]
 
-        with open(os.path.join(TARGET_DIR, sample_id, "donor_species")) as infile, open(revised_path, "w") as output:
+        with open(os.path.join(BASE_DIR, sample_id, "donor_species")) as infile, open(revised_path, "w") as output:
             output.write("#sample\tgene\tMMSH_iden\tMMSH\tMMSH_taxid\tMMSH_donor\tbbhO_donor\tbbhO\n")
-            for cols in read_tsv(os.path.join(TARGET_DIR, sample_id, "donor_species")):
+            for cols in read_tsv(os.path.join(BASE_DIR, sample_id, "donor_species")):
                 if len(cols) < 7:
                     cols += [""] * (7 - len(cols))
                 if cols[0] != sample_id or cols[1] not in bbho:
