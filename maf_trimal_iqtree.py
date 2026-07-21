@@ -71,7 +71,7 @@ def get_sequence_files(fpath):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python script.py <path> [step]")
+        print("Usage: python3 maf_trimal_iqtree.py <path> [step]")
         print("  step: mafft | trimal | iqtree | all (default: all)")
         sys.exit(1)
     
