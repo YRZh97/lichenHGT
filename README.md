@@ -47,7 +47,7 @@ For example:
 GCA_964256395,g353
 ```
 
-### FCS-GX for contamination detection
+### Filtering
 
 Run `FCS-GX` on both the genome sequence and the corresponding CDS sequence for each MAG to identify potential contaminant sequences.
 
@@ -70,7 +70,7 @@ GCA_964257225   contig  CAXVDQ010000002.1       1       1808    590398  TRIM    
 
 This merged report serves as the input for `process_fcs_res.py` in the subsequent contamination filtering step.
 
-### Run Scripts 
+Then run:
 
 ```bash
 python3 filt.py
@@ -153,11 +153,23 @@ python3 ai_calc.py {n}.fmt6 max300_subseq.fmt6 reformat.txt
 
 This script generates an `{n}_ai.txt` file for each MAG. This file contains the Alien Index (AI) calculation results and related information for all genes in the corresponding sample.
 
-The script also extracts genes that meet the predefined filtering criteria together with their homologous sequences, generating one `{gene}_prealign.fa` file for each candidate gene. These FASTA files are used as input for subsequent sequence alignment and phylogenetic analyses.
+The script also extracts genes that meet the predefined filtering criteria together with their homologous sequences, generating one `{prot}_prealign.fa` file for each candidate gene. These FASTA files are used as input for subsequent sequence alignment and phylogenetic analyses.
 
 ## Step 3. Tree Inference
 
+Before tree construction, the candidate protein sequences require additional processing.
 
+For each `{prot}_prealign.fa` file, the following steps are performed:
+
+1. Align the sequences using `MAFFT`.
+2. Trim the resulting alignment using `trimAl`.
+3. Construct a phylogenetic tree using `IQ-TREE`.
+
+These steps can be executed by running the provided script, for example:
+
+```text
+python3 maf_trimal_iqtree.py prealign/ --step mafft
+```
 
 ## Step 4. Confidence Classification
 
