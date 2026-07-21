@@ -70,7 +70,7 @@ GCA_964257225   contig  CAXVDQ010000002.1       1       1808    590398  TRIM    
 
 This merged report serves as the input for `process_fcs_res.py` in the subsequent contamination filtering step.
 
-### Running Scripts 
+### Run Scripts 
 
 ```bash
 python3 filt.py
@@ -126,6 +126,24 @@ This script uses the filtered protein sequences (`newdir/{n}.filtered.faa`) from
    ```
 
 where `{n}` is the name of the corresponding MAG.
+
+### Generate Taxonomic Lineages
+
+Extract the taxonomic IDs (the last column) from `max300_subseq.fmt6` and use `TaxonKit` to retrieve the corresponding taxonomic lineages.
+
+```text
+echo 112416 | taxonkit lineage | taxonkit reformat | cut -f 1,3
+```
+
+The resulting lineage information should be saved as `reformat.txt` in the following format:
+
+```text
+112416    Eukaryota;Ascomycota;Lecanoromycetes;Lecanorales;Parmeliaceae;Letharia;Letharia columbiana
+```
+
+where the first column is the NCBI Taxonomy ID and the second column is the corresponding taxonomic lineage from kingdom to species.
+
+### 
 
 
 
