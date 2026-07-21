@@ -1,21 +1,27 @@
 # Codes for HGT detection in lichen metagenomes
 
-map.R -------------------- corresponding to Fig.1  
-process_fcs_res.py ------- flag contaminant sequences, corresponding to 'Contig filtering and contamination detection' part in Fig.2  
-filt.py ------------------ select sequences based on the results of the previous two scripts, corresponding to 'Contig filtering and contamination detection' part in Fig.2  
-diamond.py --------------- sequence alignment, corresponding to 'Alien Index score calculation' part in Fig.2  
-ai_calc.py --------------- AI calculation, corresponding to 'Alien Index score calculation' part in Fig.2  
-maf_trimal_iqtree.py ----- tree construction based on AI screening, corresponding to 'Tree inference' part in Fig.2  
-stat_hgtincontigs.py ----- assign confidence levels to candidate genes, corresponding to 'Confidence classification' part in Fig.2  
-donor_species.py --------- donor inference, corresponding to 'Donor inference' part in Fig.2  
-breakpoint_bwa_samtools.py obtain coverage information at the breakpoint, corresponding to Fig. 5b &5c  
-depth.py ----------------- coverage calculation, corresponding to Fig. 5b&5c
 
-=========================================================================================================================================================================================================================  
-lichenHGT-plots.ipynb contains codes used to generate the figures in the main text and supplementary materials. 'breakp_data_update.xlsx' file could be generated using depth.py, 'target_gene_annotation_2021.tsv' file is a combination of 'gene_on_contig0422' and Supplementary Datasets 4-6, 'supplementary tables1201-github.xlsx' contains fungal HGT-acquired genes and eggNOG-mapper results for total 2,021 HGT candidates.
+`map.R`: corresponding to Fig.1
 
+`process_fcs_res.py`: flag contaminant sequences, corresponding to 'Contig filtering and contamination detection' part in Fig.2
 
+`filt.py`: select sequences based on the results of the previous two scripts, corresponding to 'Contig filtering and contamination detection' part in Fig.2
 
+`diamond.py`: sequence alignment, corresponding to 'Alien Index score calculation' part in Fig.2
+
+`ai_calc.py`: AI calculation, corresponding to 'Alien Index score calculation' part in Fig.2
+
+`maf_trimal_iqtree.py`: tree construction based on AI screening, corresponding to 'Tree inference' part in Fig.2
+
+`stat_hgtincontigs.py`: assign confidence levels to candidate genes, corresponding to 'Confidence classification' part in Fig.2
+
+`donor_species.py`: donor inference, corresponding to 'Donor inference' part in Fig.2
+
+`breakpoint_bwa_samtools.py` obtain coverage information at the breakpoint, corresponding to Fig. 5b &5c
+
+`depth.py`: coverage calculation, corresponding to Fig. 5b&5c
+
+> **Note:** `lichenHGT-plots.ipynb` contains codes used to generate the figures in the main text and supplementary materials. `533sample_hqmaginfo.txt` is used as the input file for `map.R`. `target_gene_annotation_2021.tsv` file is a combination of `gene_on_contig0422` and Supplementary Datasets 4-6, `supplementary tables1201-github.xlsx` contains fungal HGT-acquired genes and eggNOG-mapper results for total 2,021 HGT candidates.
 
 ## Step 1. Contig filtering and contamination detection
 This step filters contigs by length and removes potentially contaminated contigs and genes. The primary scripts used are `filt.py` and `process_fcs_res.py`.
@@ -262,6 +268,15 @@ Among the output files, `donor_species_final` is the final result used for all d
 
 Place the raw sequencing FASTQ files in the `sample_fq` directory. The other required input file, `hq.name`, was generated in a previous step.
 
+Generate an input file named `allHGTs.txt`, which contains the gene IDs of all candidate HGT genes. Each gene ID should be placed on a separate line.
+
+Example:
+
+```text
+20212130_Refined_6_g10086.t1
+RQ5379_Refined_2_g1037.t1
+```
+
 After preparing the input files, run:
 
 ```bash
@@ -270,6 +285,12 @@ python3 breakpoint_bwa_samtools.py
 
 > **Note:** The `cmd` string in the script is configured for our laboratory's computing environment and may not run successfully on other systems. If you wish to reproduce the analysis, please modify the command according to your local environment while keeping the same software, parameters, and workflow.
 
+Then run:
 
+```bash
+python3 xxx.py
+```
+
+The script uses the previously generated `{n}.rmdup.bam` files from `samtools` and the corresponding GFF annotation files of each analyzed sample as input. It generates corresponding `depth.txt` output files. The uploaded `breakp_data_update.xlsx` file is the processed version of the `depth.txt` used for the data analyses presented in this study.
 
 
