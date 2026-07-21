@@ -143,7 +143,25 @@ The resulting lineage information should be saved as `reformat.txt` in the follo
 
 where the first column is the NCBI Taxonomy ID and the second column is the corresponding taxonomic lineage from kingdom to species.
 
-### 
+### AI calculation
+
+Use the two alignment result files generated in the previous steps together with the lineage file as input to run `xxx.py`.
+
+```text
+python3 ai_calc.py {n}.fmt6 max300_subseq.fmt6 reformat.txt
+```
+
+This script generates an `{n}_ai.txt` file for each MAG. This file contains the Alien Index (AI) calculation results and related information for all genes in the corresponding sample.
+
+The script also extracts genes that meet the predefined filtering criteria together with their homologous sequences, generating one `{gene}_prealign.fa` file for each candidate gene. These FASTA files are used as input for subsequent sequence alignment and phylogenetic analyses.
+
+## Step 3. Tree Inference
+
+
+
+## Step 4. Confidence Classification
+
+## Step 5. Donor Inference
 
 
 
