@@ -288,7 +288,7 @@ python3 breakpoint_bwa_samtools.py
 Then run:
 
 ```bash
-python3 xxx.py
+python3 depth.py
 ```
 
 The script uses the previously generated `{n}.rmdup.bam` files from `samtools` and the corresponding GFF annotation files of each analyzed sample as input. It generates corresponding `depth.txt` output files. The uploaded `breakp_data_update.xlsx` file is the processed version of the `depth.txt` used for the data analyses presented in this study.
